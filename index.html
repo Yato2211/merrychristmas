@@ -106,9 +106,8 @@
                     canvas.width = width;
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
-                    canvas.width  = canvas.clientWidth;
-                    canvas.height = canvas.clientHeight;
                     ctx.drawImage(img, 0, 0, width, height);
+
 
                     const texture = new THREE.CanvasTexture(canvas);
                     texture.minFilter = THREE.LinearFilter;
@@ -516,7 +515,9 @@
             const video = document.getElementsByClassName('input_video')[0];
             const canvas = document.getElementById('camera-preview');
             const ctx = canvas.getContext('2d');
-            
+            canvas.width  = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+
             const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
             hands.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
 
