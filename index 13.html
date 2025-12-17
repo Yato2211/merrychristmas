@@ -106,6 +106,8 @@
                     canvas.width = width;
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
+                    canvas.width  = canvas.clientWidth;
+                    canvas.height = canvas.clientHeight;
                     ctx.drawImage(img, 0, 0, width, height);
 
                     const texture = new THREE.CanvasTexture(canvas);
@@ -519,7 +521,24 @@
             hands.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
 
             hands.onResults(results => {
-                ctx.clearRect(0,0,100,75); ctx.drawImage(results.image, 0, 0, 100, 75);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (results.image) {
+                    const iw = results.image.width;
+                    const ih = results.image.height;
+                    const cw = canvas.width;
+                    const ch = canvas.height;
+
+                    // Scale kiểu cover – giống background-size: cover
+                    const scale = Math.max(cw / iw, ch / ih);
+                    const nw = iw * scale;
+                    const nh = ih * scale;
+
+                    const x = (cw - nw) / 2;
+                    const y = (ch - nh) / 2;
+
+                    ctx.drawImage(results.image, x, y, nw, nh);
+                }
 
                 // --- Hand Logic  ---
                 if (results.multiHandLandmarks.length === 2) {
